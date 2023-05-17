@@ -27,9 +27,13 @@ const router = createBrowserRouter([
 
       {
         path: "/checkout/:id",
-        element: <CheckOut />,
+        element: (
+          <PrivateRoute>
+            <CheckOut />
+          </PrivateRoute>
+        ),
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/carsServices/${params.id}`),
+          fetch(`https://y-five-alpha.vercel.app/carsServices/${params.id}`),
       },
       {
         path: "/bookings",

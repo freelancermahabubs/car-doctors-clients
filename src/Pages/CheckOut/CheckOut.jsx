@@ -22,7 +22,7 @@ const CheckOut = () => {
       price: price,
     };
     console.log(booking);
-    fetch("http://localhost:5000/carsServiceBookings", {
+    fetch("https://y-five-alpha.vercel.app/carsServiceBookings", {
       method: "POST",
       headers: {
         "content-type": "application/json",

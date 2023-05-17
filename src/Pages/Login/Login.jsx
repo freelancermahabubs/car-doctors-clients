@@ -1,9 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import login from "../../assets/images/login/login.svg";
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
+import SocialLogin from "../Shared/SocialLogin/SocialLogin";
+
 const Login = () => {
   const { singIn } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+  let from = location.state?.from?.pathname || "/";
   const handleLogin = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -14,6 +19,7 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
+        navigate(from, { replace: true });
       })
       .catch((error) => console.log(error));
   };
@@ -68,6 +74,7 @@ const Login = () => {
                 Sing Up
               </Link>
             </p>
+            <SocialLogin />
           </div>
         </div>
       </div>

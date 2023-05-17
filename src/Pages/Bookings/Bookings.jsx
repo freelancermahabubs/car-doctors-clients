@@ -1,22 +1,37 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import BookingsRow from "./BookingsRow";
+import { useNavigate } from "react-router-dom";
 
 const Bookings = () => {
   const { user } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
-  console.log(bookings);
-  const url = `http://localhost:5000/carsServiceBookings?email=${user?.email}`;
+  // console.log(bookings);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("cars-access-token");
+  const url = `https://y-five-alpha.vercel.app/carsServiceBookings?email=${user?.email}`;
   useEffect(() => {
-    fetch(url)
+    if (!token) return;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
-      .then((data) => setBookings(data));
-  }, [url]);
+      .then((data) => {
+        if (!data.error) {
+          setBookings(data);
+        } else {
+          navigate("/");
+        }
+      });
+  }, [url, navigate, token]);
 
   const handleDelete = (id) => {
     const proceed = confirm("Are You Sure you wan to delete");
     if (proceed) {
-      fetch(`http://localhost:5000/carsServiceBookings/${id}`, {
+      fetch(`https://y-five-alpha.vercel.app/carsServiceBookings/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
@@ -32,7 +47,7 @@ const Bookings = () => {
   };
 
   const handleBookingConfirm = (id) => {
-    fetch(`http://localhost:5000/carsServiceBookings/${id}`, {
+    fetch(`https://y-five-alpha.vercel.app/carsServiceBookings/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "Application/json",
